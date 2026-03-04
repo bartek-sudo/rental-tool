@@ -1,0 +1,197 @@
+<header class="antialiased">
+  <nav class="bg-white border-gray-200 px-4 lg:px-6 py-2.5 dark:bg-gray-800">
+    <div class="flex flex-wrap justify-between items-center max-w-full">
+      <div class="flex justify-start items-center">
+        <a routerLink="/" class="flex mr-2 lg:mr-4">
+          <img src="https://flowbite.s3.amazonaws.com/logo.svg" class="mr-2 lg:mr-3 h-8" alt="FlowBite Logo" />
+          <span class="self-center text-xl lg:text-2xl font-semibold whitespace-nowrap dark:text-white">RentalTool</span>
+        </a>
+
+        <!-- Formularz wyszukiwania -->
+        <form (ngSubmit)="onSearchSubmit($event)" method="GET" class="hidden lg:block lg:pl-2">
+          <label for="topbar-search" class="sr-only">Search</label>
+          <div class="relative mt-1 w-64 xl:w-96">
+            <div class="flex absolute inset-y-0 left-0 items-center pl-3 pointer-events-none">
+              <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true"
+                xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
+                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z" />
+              </svg>
+            </div>
+            <input type="text" name="search" id="topbar-search" [(ngModel)]="searchInputValue"
+              (input)="onSearchInput($event)"
+              class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full pl-9 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+              placeholder="Szukaj narzędzi..." autocomplete="off">
+
+            <!-- Przycisk do czyszczenia wyszukiwania -->
+            <button *ngIf="searchInputValue" type="button" (click)="clearSearch()"
+              class="absolute inset-y-0 right-0 flex items-center pr-3">
+              <svg class="w-4 h-4 text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300"
+                fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+              </svg>
+            </button>
+          </div>
+        </form>
+      </div>
+
+      <div class="flex items-center lg:order-2">
+        <!-- Przycisk wyszukiwania mobilnego -->
+        <button id="toggleSidebarMobileSearch" type="button" (click)="toggleMobileSearch()"
+          class="p-2 text-gray-500 rounded-lg lg:hidden hover:text-gray-900 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
+          <span class="sr-only">Szukaj</span>
+          <!-- Search icon -->
+          <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
+            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z" />
+          </svg>
+        </button>
+
+
+
+        <!-- Dark mode toggle -->
+        <button type="button" (click)="toggleDarkMode()"
+          class="p-2 mr-1 text-gray-500 rounded-lg hover:text-gray-900 hover:bg-gray-100 dark:text-gray-400 dark:hover:text-white dark:hover:bg-gray-700 focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600">
+
+          @if (!isDarkMode) {
+          <!-- Ikona księżyca (pokaż w jasnym trybie) -->
+          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+            <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path>
+          </svg>
+          } @else {
+          <!-- Ikona słońca (pokaż w ciemnym trybie) -->
+          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+            <path
+              d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z"
+              fill-rule="evenodd" clip-rule="evenodd"></path>
+          </svg>
+          }
+
+          <span class="sr-only">Przełącz tryb ciemny</span>
+        </button>
+
+        @if (authService.isLogged()) {
+        <button type="button"
+          class="flex w-10 h-10 p-0 bg-transparent rounded-full items-center justify-center text-sm md:mr-0 focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600"
+          id="user-menu-button" aria-expanded="false" data-dropdown-toggle="dropdown">
+          <span class="sr-only">Otwórz menu użytkownika</span>
+          <span class="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center text-blue-600 dark:bg-blue-900/30 dark:text-blue-400 font-medium text-lg">
+            {{getInitials(authService.currentUser()?.firstName, authService.currentUser()?.lastName)}}
+          </span>
+        </button>
+        } @else {
+        <a routerLink="/login"
+          class="text-gray-800 dark:text-white hover:bg-gray-50 focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-4 py-2 md:px-5 md:py-2.5 dark:hover:bg-gray-700 focus:outline-none dark:focus:ring-gray-800">
+          Zaloguj się
+        </a>
+        <a routerLink="/register"
+          class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 md:px-5 md:py-2.5 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">
+          Zarejestruj się
+        </a>
+        }
+
+        <!-- User dropdown menu (shown when logged in) -->
+        <div
+          class="hidden z-50 my-4 w-56 text-base list-none bg-white rounded divide-y divide-gray-100 shadow dark:bg-gray-700 dark:divide-gray-600"
+          id="dropdown">
+          <!-- Sekcja 1: Informacje o użytkowniku -->
+          <div class="py-3 px-4">
+            <span
+              class="block text-sm font-semibold text-gray-900 dark:text-white">{{authService.currentUser()?.firstName}}
+              {{authService.currentUser()?.lastName}}</span>
+            <span
+              class="block text-sm text-gray-500 truncate dark:text-gray-400">{{authService.currentUser()?.email}}</span>
+          </div>
+
+          <!-- Sekcja 2: Moje narzędzia, wypożyczenia, rezerwacje -->
+          <ul class="py-1 text-gray-500 dark:text-gray-400" aria-labelledby="dropdown">
+            <li>
+              <a routerLink="/my-tools"
+                class="block py-2 px-4 text-sm hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-400 dark:hover:text-white">
+                Moje narzędzia
+              </a>
+            </li>
+            <li>
+              <a routerLink="/my-rentals"
+                class="block py-2 px-4 text-sm hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-400 dark:hover:text-white">
+                Moje wynajmy
+              </a>
+            </li>
+            <li>
+              <a routerLink="/my-tool-reservations"
+                class="block py-2 px-4 text-sm hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-400 dark:hover:text-white">
+                Rezerwacje moich narzędzi
+              </a>
+            </li>
+          </ul>
+
+          <!-- Sekcja 3: Panel admin -->
+          @if (isAdmin()) {
+          <ul class="py-1 text-gray-500 dark:text-gray-400" aria-labelledby="dropdown">
+            <li>
+              <a routerLink="/admin"
+                class="block py-2 px-4 text-sm hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-400 dark:hover:text-white">
+                Panel Administratora
+              </a>
+            </li>
+          </ul>
+          }
+
+          <!-- Sekcja 3.5: Panel moderatora -->
+          @if (isModerator() && !isAdmin()) {
+          <ul class="py-1 text-gray-500 dark:text-gray-400" aria-labelledby="dropdown">
+            <li>
+              <a routerLink="/moderator"
+                class="block py-2 px-4 text-sm hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-400 dark:hover:text-white">
+                Panel Moderatora
+              </a>
+            </li>
+          </ul>
+          }
+
+          <!-- Sekcja 4: Profile i settings -->
+          <ul class="py-1 text-gray-500 dark:text-gray-400" aria-labelledby="dropdown">
+            <li>
+              <a routerLink="/account-settings" routerLinkActive="active" class="block py-2 px-4 text-sm hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-400 dark:hover:text-white">Ustawienia konta</a>
+            </li>
+          </ul>
+
+          <!-- Sekcja 5: Sign out -->
+          <ul class="py-1 text-gray-500 dark:text-gray-400" aria-labelledby="dropdown">
+            <li>
+              <button (click)="logout()"
+                class="block w-full text-left py-2 px-4 text-sm hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Wyloguj się</button>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Mobilne wyszukiwanie -->
+  <div id="mobile-search" [ngClass]="{'hidden': !showMobileSearch}"
+    class="absolute w-full left-0 z-50 bg-white dark:bg-gray-800 p-4 lg:hidden">
+    <form (ngSubmit)="onSearchSubmit($event)" method="GET">
+      <div class="relative">
+        <div class="flex absolute inset-y-0 left-0 items-center pl-3 pointer-events-none">
+          <svg class="w-5 h-5 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
+            fill="none" viewBox="0 0 20 20">
+            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z" />
+          </svg>
+        </div>
+        <input type="text" name="search" [(ngModel)]="searchInputValue" (input)="onSearchInput($event)"
+          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full pl-10 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+          placeholder="Szukaj narzędzi..." autocomplete="off">
+
+        <button *ngIf="searchInputValue" type="button" (click)="clearSearch()"
+          class="absolute inset-y-0 right-0 flex items-center pr-3">
+          <svg class="w-4 h-4 text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300" fill="none"
+            stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+          </svg>
+        </button>
+      </div>
+    </form>
+  </div>
+</header>
