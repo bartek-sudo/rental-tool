@@ -1,0 +1,17 @@
+# Backend
+rentalTool-BackEnd/target/
+rentalTool-BackEnd/logs/
+rentalTool-BackEnd/.mvn/
+
+# Frontend
+rentalTool-FrontEnd/node_modules/
+rentalTool-FrontEnd/dist/
+
+# IDE
+.idea/
+*.iml
+.vscode/
+
+# OS
+.DS_Store
+Thumbs.db
